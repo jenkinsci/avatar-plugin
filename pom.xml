@@ -19,7 +19,7 @@
 	<artifactId>avatar</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
-	<name>Avatar plugin</name>
+	<name>Avatar Plugin</name>
 
 	<repositories>
 		<repository>
