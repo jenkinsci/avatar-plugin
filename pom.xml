@@ -16,7 +16,7 @@
 
 	<groupId>net.hurstfrost.jenkins</groupId>
 	<artifactId>avatar</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<name>Avatar Plugin</name>
 
@@ -33,10 +33,4 @@
 			<url>http://maven.glassfish.org/content/groups/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
-
-  <scm>
-    <connection>scm:svn:https://svn.jenkins-ci.org/tags/avatar-1.0</connection>
-    <developerConnection>scm:svn:https://svn.jenkins-ci.org/tags/avatar-1.0</developerConnection>
-    <url>https://svn.jenkins-ci.org/tags/avatar-1.0</url>
-  </scm>
 </project>
