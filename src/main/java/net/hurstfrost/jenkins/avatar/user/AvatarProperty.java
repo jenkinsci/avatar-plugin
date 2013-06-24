@@ -135,23 +135,23 @@ public class AvatarProperty extends UserProperty implements Action {
      */
     public void doUpload(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException, FormException {
         FileItem file = req.getFileItem("avatarimage.file");
+        AvatarImage currentReplacementImage = replacementImage;
 
         if (file != null && !file.getName().isEmpty()) {
             if (file.getSize() > MAX_AVATAR_IMAGE_SIZE) {
                 lastError = "Uploaded image is too large.";
             } else {
-                // Ensure we can interpret this file as an Image
-                try {
-                    replacementImage = AvatarImage.fromBytes(file.get());
-                } catch (Exception e) {
-                    // Uploaded file is invalid, ignore
-                    lastError = e.getMessage();
+                replacementImage = AvatarImage.fromBytes(file.get());
+
+                if (replacementImage == null) {
+                    lastError = "Unsupported image format " + file.getName();
+                    replacementImage = currentReplacementImage;
                 }
             }
         } else {
         	// Indicate that image should be removed
             lastWarning = "Empty image uploaded. Avatar will be removed on save.";
-        	replacementImage = new AvatarImage();
+            replacementImage = new AvatarImage();
         }
 
         req.getView(this, "configIframe").forward(req, rsp);
