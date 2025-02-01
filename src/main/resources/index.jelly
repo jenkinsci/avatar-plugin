@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
-  This plugin allows you to attach avatar images to Jenkins users for use by other plugins.
+  Allows users to upload avatars.
 </div>

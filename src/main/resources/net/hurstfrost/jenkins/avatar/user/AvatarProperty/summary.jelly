@@ -1,6 +1,0 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<j:if test="${it.hasAvatar}">
-Avatar
-  <a href="${it.avatarUrl}"><img style="height:128px;border:1px solid black;background:url('/plugin/avatar/checker16x16.png') repeat" src="${it.avatarUrl}"/></a>
-</j:if>
-</j:jelly>

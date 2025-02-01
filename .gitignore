@@ -1,0 +1,26 @@
+target/
+.DS_Store
+work/
+
+# IntelliJ project files
+*.iml
+*.iws
+*.ipr
+/.idea/*
+!/.idea/icon.svg
+!/.idea/.name
+out
+
+# Eclipse and VSCode project files
+.settings
+.classpath
+.project
+.factorypath
+build
+
+# VSCode workspace file
+*.code-workspace
+
+# vim
+*~
+*.swp

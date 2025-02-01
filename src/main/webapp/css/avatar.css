@@ -1,0 +1,40 @@
+.avatar-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--section-padding);
+
+    &:has(.avatar-container__icon > svg) {
+        .avatar-container__remove {
+            display: none;
+        }
+    }
+
+    .avatar-container__icon {
+        position: relative;
+
+        &:hover {
+            .avatar-container__remove {
+                scale: 1;
+            }
+        }
+    }
+
+    .avatar-container__remove {
+        position: absolute;
+        top: 0.0625rem;
+        right: 0.0625rem;
+        min-height: 0;
+        min-width: 0;
+        padding: 0.125rem;
+        z-index: 1;
+        background: var(--background);
+        scale: 0;
+        transition: var(--standard-transition);
+
+
+        svg {
+            width: 0.75rem;
+            height: 0.75rem;
+        }
+    }
+}
