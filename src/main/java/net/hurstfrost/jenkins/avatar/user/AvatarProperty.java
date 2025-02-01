@@ -8,7 +8,11 @@ import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +22,6 @@ import javax.imageio.stream.ImageInputStream;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload2.core.FileItem;
-import org.apache.commons.io.IOUtils;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
@@ -26,9 +29,7 @@ import org.kohsuke.stapler.export.Exported;
 public class AvatarProperty extends UserProperty implements Action {
     public static final int MAX_AVATAR_IMAGE_SIZE = 10 * 1024 * 1024;
 
-    private static final Logger log = Logger.getLogger(AvatarProperty.class.getName());
-
-    private transient AvatarImage replacementImage;
+    private static final Logger LOGGER = Logger.getLogger(AvatarProperty.class.getName());
 
     private AvatarImage avatarImage;
 
@@ -46,7 +47,7 @@ public class AvatarProperty extends UserProperty implements Action {
     }
 
     public boolean isHasAvatar() {
-        return avatarImage != null;
+        return avatarImage != null && avatarImage.isValid();
     }
 
     /**
@@ -54,15 +55,22 @@ public class AvatarProperty extends UserProperty implements Action {
      */
     public void doImage(StaplerRequest2 req, StaplerResponse2 rsp) {
         if (avatarImage == null) {
-            log.log(Level.WARNING, "No image set for user '" + user.getId() + "'");
+            LOGGER.log(Level.WARNING, "No image set for user '" + user.getId() + "'");
             return;
         }
 
-        rsp.setContentType(avatarImage.mimeType);
-        try {
-            IOUtils.write(avatarImage.imageBytes, rsp.getOutputStream());
+        File file = new File(user.getUserFolder(), "avatar." + avatarImage.filenameSuffix);
+        if (!file.exists()) {
+            LOGGER.log(Level.WARNING, "Avatar image for user '" + user.getId() + "' does not exist");
+            return;
+        }
+
+        try (FileInputStream fileInputStream = new FileInputStream(file); ) {
+            rsp.setContentType(avatarImage.mimeType);
+            rsp.serveFile(
+                    req, fileInputStream, file.lastModified(), file.length(), "avatar." + avatarImage.filenameSuffix);
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Unable to write image for user '" + user.getId() + "'", e);
+            LOGGER.log(Level.SEVERE, "Unable to write image for user '" + user.getId() + "'", e);
         }
     }
 
@@ -70,6 +78,7 @@ public class AvatarProperty extends UserProperty implements Action {
     public UserProperty reconfigure(StaplerRequest2 req, JSONObject form) {
         req.bindJSON(this, form);
 
+        AvatarImage replacementImage;
         try {
             FileItem<?> file = req.getFileItem2("avatar");
 
@@ -77,29 +86,34 @@ public class AvatarProperty extends UserProperty implements Action {
                 if (file.getSize() > MAX_AVATAR_IMAGE_SIZE) {
                     throw new Failure("Uploaded image is too large.");
                 } else {
-                    replacementImage = AvatarImage.fromBytes(file.get());
+                    byte[] bytes = file.get();
+                    replacementImage = AvatarImage.fromBytes(bytes);
 
                     if (replacementImage == null) {
                         throw new Failure("Unsupported image format " + file.getName());
                     }
+
+                    if (replacementImage.isValid()) {
+                        File fileToSave = new File(user.getUserFolder(), "avatar." + replacementImage.filenameSuffix);
+                        try (FileOutputStream fos = new FileOutputStream(fileToSave)) {
+                            fos.write(bytes);
+                        }
+                        avatarImage = replacementImage;
+                    } else {
+                        avatarImage = null;
+                    }
                 }
             } else {
                 if (!req.getParameter("existingAvatar").equals("present")) {
-                    replacementImage = new AvatarImage();
+                    if (avatarImage != null && avatarImage.filenameSuffix != null) {
+                        File fileToDelete = new File(user.getUserFolder(), "avatar." + avatarImage.filenameSuffix);
+                        Files.deleteIfExists(fileToDelete.toPath());
+                    }
+                    avatarImage = null;
                 }
             }
         } catch (jakarta.servlet.ServletException | IOException e) {
             throw new RuntimeException(e);
-        }
-
-        if (replacementImage != null) {
-            if (replacementImage.isValid()) {
-                avatarImage = replacementImage;
-            } else {
-                avatarImage = null;
-            }
-
-            replacementImage = null;
         }
 
         return this;
@@ -133,7 +147,6 @@ public class AvatarProperty extends UserProperty implements Action {
     }
 
     public static class AvatarImage {
-        private byte[] imageBytes;
         private String mimeType;
         private String filenameSuffix;
 
@@ -147,11 +160,10 @@ public class AvatarProperty extends UserProperty implements Action {
 
                 if (mimeTypes.length > 0 && fileSuffixes.length > 0) {
                     AvatarImage avatarImage = new AvatarImage();
-                    avatarImage.imageBytes = bytes;
                     avatarImage.mimeType = mimeTypes[0];
                     avatarImage.filenameSuffix = fileSuffixes[0];
 
-                    log.log(
+                    LOGGER.log(
                             Level.FINE,
                             "Avatar image interpreted as " + avatarImage.mimeType + " ." + avatarImage.filenameSuffix);
 
@@ -163,7 +175,7 @@ public class AvatarProperty extends UserProperty implements Action {
         }
 
         public boolean isValid() {
-            return imageBytes != null;
+            return filenameSuffix != null;
         }
     }
 }
