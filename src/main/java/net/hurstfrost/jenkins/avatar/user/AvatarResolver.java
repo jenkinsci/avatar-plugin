@@ -7,13 +7,15 @@ import hudson.tasks.UserAvatarResolver;
 @Extension
 public class AvatarResolver extends UserAvatarResolver {
     @Override
-    public String findAvatarFor(User user, int i, int i1) {
-        AvatarProperty avatarProperty = user.getProperty(AvatarProperty.class);
+    public String findAvatarFor(User user, int width, int height) {
+        if (user != null) {
+            AvatarProperty avatarProperty = user.getProperty(AvatarProperty.class);
 
-        if (avatarProperty != null) {
-            return avatarProperty.getAvatarUrl();
+            if (avatarProperty != null) {
+                return avatarProperty.getAvatarUrl();
+            }
         }
 
-        return null;
+        return "symbol-person-circle";
     }
 }
