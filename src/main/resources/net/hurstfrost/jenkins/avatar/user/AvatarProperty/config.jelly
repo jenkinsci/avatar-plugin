@@ -14,7 +14,7 @@
       <button id="avatar-remove-button"
               type="button"
               class="jenkins-button avatar-container__remove">
-        <l:icon src="symbol-close" />
+        <l:icon src="symbol-close" alt="${%Remove avatar}" />
       </button>
     </div>
 

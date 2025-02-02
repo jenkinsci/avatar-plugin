@@ -1,7 +1,6 @@
 .avatar-container {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--section-padding);
 
     &:has(.avatar-container__icon > svg) {
         .avatar-container__remove {
@@ -11,30 +10,43 @@
 
     .avatar-container__icon {
         position: relative;
+        padding-right: calc(var(--section-padding) / 1.5);
+        z-index: 1;
 
         &:hover {
             .avatar-container__remove {
                 scale: 1;
+                opacity: 1;
             }
         }
     }
 
     .avatar-container__remove {
         position: absolute;
-        top: 0.0625rem;
-        right: 0.0625rem;
+        top: -0.125rem;
+        left: 1.875rem;
         min-height: 0;
         min-width: 0;
-        padding: 0.125rem;
+        padding: 0.25rem;
         z-index: 1;
-        background: var(--background);
+        background: color-mix(in srgb, var(--background) 75%, transparent);
+        backdrop-filter: saturate(2) blur(10px);
         scale: 0;
-        transition: var(--standard-transition);
-
+        opacity: 0;
+        transition: 0.3s cubic-bezier(0, 0.5, 0.5, 1.25);
 
         svg {
             width: 0.75rem;
             height: 0.75rem;
+
+            * {
+                stroke-width: 48px;
+            }
+        }
+
+        &:focus {
+            scale: 1;
+            opacity: 1;
         }
     }
 }
