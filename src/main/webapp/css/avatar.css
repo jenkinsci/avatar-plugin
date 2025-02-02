@@ -43,5 +43,10 @@
                 stroke-width: 48px;
             }
         }
+
+        &:focus {
+            scale: 1;
+            opacity: 1;
+        }
     }
 }
