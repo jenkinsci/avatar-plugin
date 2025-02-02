@@ -16,6 +16,6 @@ public class AvatarResolver extends UserAvatarResolver {
             }
         }
 
-        return "symbol-person-circle";
+        return null;
     }
 }
