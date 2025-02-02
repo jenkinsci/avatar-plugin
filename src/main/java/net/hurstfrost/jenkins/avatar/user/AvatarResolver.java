@@ -4,7 +4,7 @@ import hudson.Extension;
 import hudson.model.User;
 import hudson.tasks.UserAvatarResolver;
 
-@Extension
+@Extension(ordinal = 100)
 public class AvatarResolver extends UserAvatarResolver {
     @Override
     public String findAvatarFor(User user, int width, int height) {
