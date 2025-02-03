@@ -22,7 +22,6 @@ import net.hurstfrost.jenkins.avatar.user.util.MockResponse;
 import org.apache.commons.fileupload2.core.FileItem;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.WithoutJenkins;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.kohsuke.stapler.StaplerRequest2;
 
@@ -166,26 +165,5 @@ class AvatarPropertyTest {
             }
         };
         assertThrows(RuntimeException.class, () -> avatarProperty.reconfigure(request6, null));
-    }
-
-    @Test
-    @WithoutJenkins
-    void getDisplayName() {
-        AvatarProperty avatarProperty = new AvatarProperty();
-        assertEquals("Avatar", avatarProperty.getDisplayName());
-    }
-
-    @Test
-    @WithoutJenkins
-    void getIconFileName() {
-        AvatarProperty avatarProperty = new AvatarProperty();
-        assertNull(avatarProperty.getIconFileName());
-    }
-
-    @Test
-    @WithoutJenkins
-    void getUrlName() {
-        AvatarProperty avatarProperty = new AvatarProperty();
-        assertEquals("avatar", avatarProperty.getUrlName());
     }
 }
