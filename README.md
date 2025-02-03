@@ -4,7 +4,7 @@ Allows users to upload avatars.
 
 ## Getting started
 
-Go to your User Account page (Click your name in the top right of Jenkins and then click Account).
+Go to your User Appearance page (Click your name in the top right of Jenkins and then click Appearance).
 
 Click 'Choose file' in the Avatar section and then Save.
 

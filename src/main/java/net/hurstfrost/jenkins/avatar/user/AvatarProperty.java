@@ -7,6 +7,7 @@ import hudson.model.Failure;
 import hudson.model.User;
 import hudson.model.UserProperty;
 import hudson.model.UserPropertyDescriptor;
+import hudson.model.userproperty.UserPropertyCategory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -143,6 +144,12 @@ public class AvatarProperty extends UserProperty implements Action {
         @Override
         public UserProperty newInstance(User user) {
             return new AvatarProperty();
+        }
+
+        @NonNull
+        @Override
+        public UserPropertyCategory getUserPropertyCategory() {
+            return UserPropertyCategory.get(UserPropertyCategory.Appearance.class);
         }
     }
 

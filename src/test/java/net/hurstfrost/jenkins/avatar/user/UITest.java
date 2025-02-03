@@ -50,7 +50,7 @@ class UITest {
             assertNotNull(defaultUserAvatar);
 
             // validate default preview
-            HtmlPage configure = webClient.goTo("user/" + TEST_USER_NAME + "/account/");
+            HtmlPage configure = webClient.goTo("user/" + TEST_USER_NAME + "/appearance/");
             HtmlForm form = configure.getFormByName("config");
             HtmlSvg defaultPreview = (HtmlSvg) configure.getElementById("avatar-preview");
             assertNotNull(defaultPreview);
@@ -77,7 +77,7 @@ class UITest {
             assertEquals(r.getURL() + "user/" + TEST_USER_NAME + "/avatar/image", userAvatar.getSrc());
 
             // validate updated preview after saving
-            configure = webClient.goTo("user/" + TEST_USER_NAME + "/account/");
+            configure = webClient.goTo("user/" + TEST_USER_NAME + "/appearance/");
             preview = (HtmlImage) configure.getElementById("avatar-preview");
             form = configure.getFormByName("config");
 
@@ -103,7 +103,7 @@ class UITest {
             assertNotNull(defaultUserAvatar);
 
             // validate updated preview after saving
-            configure = webClient.goTo("user/" + TEST_USER_NAME + "/account/");
+            configure = webClient.goTo("user/" + TEST_USER_NAME + "/appearance/");
             defaultPreview = (HtmlSvg) configure.getElementById("avatar-preview");
             assertNotNull(defaultPreview);
             assertFalse(new File(user.getUserFolder(), AVATAR_FILE_NAME).exists());
