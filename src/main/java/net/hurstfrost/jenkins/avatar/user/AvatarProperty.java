@@ -22,6 +22,7 @@ import javax.imageio.stream.ImageInputStream;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload2.core.FileItem;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
@@ -32,6 +33,9 @@ public class AvatarProperty extends UserProperty implements Action {
     private static final Logger LOGGER = Logger.getLogger(AvatarProperty.class.getName());
 
     private AvatarImage avatarImage;
+
+    @DataBoundConstructor
+    public AvatarProperty() {}
 
     @Exported
     public String getAvatarUrl() {
